@@ -15,4 +15,12 @@
 
 const Route = use('Route')
 
+/**
+ * User routes
+ */
 Route.post('users', 'UserController.store')
+
+/**
+ * Auth routes
+ */
+Route.post('sessions', 'SessionController.store')
