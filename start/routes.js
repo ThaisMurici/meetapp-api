@@ -29,3 +29,4 @@ Route.post('sessions', 'SessionController.store')
  * Password routes
  */
 Route.post('passwords', 'ForgotPasswordController.store')
+Route.put('passwords/reset', 'ForgotPasswordController.update')
