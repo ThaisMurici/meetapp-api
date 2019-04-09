@@ -30,3 +30,8 @@ Route.post('sessions', 'SessionController.store')
  */
 Route.post('passwords', 'ForgotPasswordController.store')
 Route.put('passwords/reset', 'ForgotPasswordController.update')
+
+/**
+ * Resources routes
+ */
+Route.resource('preferences', 'PreferenceController').apiOnly()
