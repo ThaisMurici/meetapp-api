@@ -24,3 +24,8 @@ Route.post('users', 'UserController.store')
  * Auth routes
  */
 Route.post('sessions', 'SessionController.store')
+
+/**
+ * Password routes
+ */
+Route.post('passwords', 'ForgotPasswordController.store')
