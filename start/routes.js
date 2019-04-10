@@ -36,8 +36,12 @@ Route.put('passwords/reset', 'ForgotPasswordController.update')
  */
 Route.group(() => {
   Route.resource('preferences', 'PreferenceController').apiOnly()
+
   Route.resource('users', 'UserController')
     .apiOnly()
     .except(['store'])
+
   Route.resource('meetups', 'MeetupController').apiOnly()
+
+  Route.post('files', 'FileController.store')
 }).middleware(['auth'])
