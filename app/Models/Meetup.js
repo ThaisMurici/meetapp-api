@@ -19,7 +19,7 @@ class Meetup extends Model {
   }
 
   themes () {
-    return this.belongsToMany('App/Models/Preference')
+    return this.belongsToMany('App/Models/Preference', 'meetup_id', 'theme_id')
       .pivotTable('meetup_themes')
       .withTimestamps()
   }

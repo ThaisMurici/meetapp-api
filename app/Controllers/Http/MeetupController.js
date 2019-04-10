@@ -14,6 +14,7 @@ class MeetupController {
     const meetups = await Meetup.query()
       .with('address')
       .with('picture')
+      .with('themes')
       .fetch()
     return meetups
   }
@@ -32,6 +33,7 @@ class MeetupController {
     ])
 
     const meetupAdress = request.input('address')
+    const meetupThemes = request.input('themes')
 
     const trx = await Database.beginTransaction()
 
@@ -41,11 +43,15 @@ class MeetupController {
       await meetup.address().create(meetupAdress, trx)
     }
 
+    if (meetupThemes) {
+      await meetup.themes().sync(meetupThemes, null, trx)
+    }
+
     await trx.commit()
 
     await meetup.load('address')
-
     await meetup.load('picture')
+    await meetup.load('themes')
 
     return meetup
   }
@@ -58,6 +64,7 @@ class MeetupController {
     const meetup = await Meetup.findOrFail(params.id)
     await meetup.load('address')
     await meetup.load('picture')
+    await meetup.load('themes')
 
     return meetup
   }
@@ -76,6 +83,7 @@ class MeetupController {
       'cover_picture'
     )
     const meetupAdress = request.input('address')
+    const meetupThemes = request.input('themes')
 
     const trx = await Database.beginTransaction()
 
@@ -85,9 +93,15 @@ class MeetupController {
       await meetup.address().update(meetupAdress, trx)
     }
 
+    if (meetupThemes) {
+      await meetup.themes().sync(meetupThemes, null, trx)
+    }
+
     await trx.commit()
 
     await meetup.load('address')
+    await meetup.load('picture')
+    await meetup.load('themes')
 
     return meetup
   }
