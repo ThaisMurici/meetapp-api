@@ -16,12 +16,6 @@
 const Route = use('Route')
 
 /**
- * User routes
- */
-Route.post('users', 'UserController.store')
-Route.put('users/:id', 'UserController.update')
-
-/**
  * Auth routes
  */
 Route.post('sessions', 'SessionController.store')
@@ -36,3 +30,4 @@ Route.put('passwords/reset', 'ForgotPasswordController.update')
  * Resources routes
  */
 Route.resource('preferences', 'PreferenceController').apiOnly()
+Route.resource('users', 'UserController').apiOnly()
