@@ -37,6 +37,12 @@ class User extends Model {
       .pivotTable('user_preferences')
       .withTimestamps()
   }
+
+  meetups () {
+    return this.belongsToMany('App/Models/Meetup')
+      .pivotTable('user_meetups')
+      .withTimestamps()
+  }
 }
 
 module.exports = User
