@@ -44,4 +44,5 @@ Route.group(() => {
   Route.resource('meetups', 'MeetupController').apiOnly()
 
   Route.post('files', 'FileController.store')
+  Route.get('files/:id', 'FileController.show')
 }).middleware(['auth'])

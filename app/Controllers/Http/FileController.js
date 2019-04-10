@@ -45,7 +45,11 @@ class FileController {
    * Display a single file.
    * GET files/:id
    */
-  async show ({ params, request, response, view }) {}
+  async show ({ params, response }) {
+    const file = await File.findOrFail(params.id)
+
+    return response.download(Helpers.tmpPath(`uploads/${file.file}`))
+  }
 
   /**
    * Update file details.
