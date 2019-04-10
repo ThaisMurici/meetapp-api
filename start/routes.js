@@ -19,6 +19,7 @@ const Route = use('Route')
  * User routes
  */
 Route.post('users', 'UserController.store')
+Route.put('users/:id', 'UserController.update')
 
 /**
  * Auth routes
