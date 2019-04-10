@@ -14,6 +14,10 @@ class Meetup extends Model {
     return this.hasOne('App/Models/MeetupAddress')
   }
 
+  picture () {
+    return this.hasOne('App/Models/File', 'cover_picture', 'id')
+  }
+
   themes () {
     return this.belongsToMany('App/Models/Preference')
       .pivotTable('meetup_themes')

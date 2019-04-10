@@ -45,4 +45,5 @@ Route.group(() => {
 
   Route.post('files', 'FileController.store')
   Route.get('files/:id', 'FileController.show')
+  Route.delete('files/:id', 'FileController.destroy')
 }).middleware(['auth'])

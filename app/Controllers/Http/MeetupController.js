@@ -13,6 +13,7 @@ class MeetupController {
   async index () {
     const meetups = await Meetup.query()
       .with('address')
+      .with('picture')
       .fetch()
     return meetups
   }
@@ -26,7 +27,8 @@ class MeetupController {
       'title',
       'description',
       'date',
-      'owner_id'
+      'owner_id',
+      'cover_picture'
     ])
 
     const meetupAdress = request.input('address')
@@ -43,6 +45,8 @@ class MeetupController {
 
     await meetup.load('address')
 
+    await meetup.load('picture')
+
     return meetup
   }
 
@@ -53,6 +57,7 @@ class MeetupController {
   async show ({ params }) {
     const meetup = await Meetup.findOrFail(params.id)
     await meetup.load('address')
+    await meetup.load('picture')
 
     return meetup
   }
@@ -63,7 +68,13 @@ class MeetupController {
    */
   async update ({ params, request }) {
     const meetup = await Meetup.findOrFail(params.id)
-    const data = request.only('title', 'description', 'date', 'owner_id')
+    const data = request.only(
+      'title',
+      'description',
+      'date',
+      'owner_id',
+      'cover_picture'
+    )
     const meetupAdress = request.input('address')
 
     const trx = await Database.beginTransaction()

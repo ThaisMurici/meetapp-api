@@ -61,7 +61,11 @@ class FileController {
    * Delete a file with id.
    * DELETE files/:id
    */
-  async destroy ({ params, request, response }) {}
+  async destroy ({ params }) {
+    const file = await File.findOrFail(params.id)
+
+    await file.delete()
+  }
 }
 
 module.exports = FileController
