@@ -39,4 +39,5 @@ Route.group(() => {
   Route.resource('users', 'UserController')
     .apiOnly()
     .except(['store'])
+  Route.resource('meetups', 'MeetupController').apiOnly()
 }).middleware(['auth'])

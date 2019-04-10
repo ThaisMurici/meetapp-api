@@ -1,9 +1,7 @@
 'use strict'
 
-/** @typedef {import('@adonisjs/framework/src/Request')} Request */
-/** @typedef {import('@adonisjs/framework/src/Response')} Response */
-/** @typedef {import('@adonisjs/framework/src/View')} View */
-
+const Database = use('Database')
+const Meetup = use('App/Models/Meetup')
 /**
  * Resourceful controller for interacting with meetups
  */
@@ -11,82 +9,86 @@ class MeetupController {
   /**
    * Show a list of all meetups.
    * GET meetups
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
    */
-  async index ({ request, response, view }) {
-  }
-
-  /**
-   * Render a form to be used for creating a new meetup.
-   * GET meetups/create
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async create ({ request, response, view }) {
+  async index () {
+    const meetups = await Meetup.query()
+      .with('address')
+      .fetch()
+    return meetups
   }
 
   /**
    * Create/save a new meetup.
    * POST meetups
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
    */
-  async store ({ request, response }) {
+  async store ({ request }) {
+    const meetupData = request.only([
+      'title',
+      'description',
+      'date',
+      'owner_id'
+    ])
+
+    const meetupAdress = request.input('address')
+
+    const trx = await Database.beginTransaction()
+
+    const meetup = await Meetup.create(meetupData, trx)
+
+    if (meetupAdress) {
+      await meetup.address().create(meetupAdress, trx)
+    }
+
+    await trx.commit()
+
+    await meetup.load('address')
+
+    return meetup
   }
 
   /**
    * Display a single meetup.
    * GET meetups/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
    */
-  async show ({ params, request, response, view }) {
-  }
+  async show ({ params }) {
+    const meetup = await Meetup.findOrFail(params.id)
+    await meetup.load('address')
 
-  /**
-   * Render a form to update an existing meetup.
-   * GET meetups/:id/edit
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async edit ({ params, request, response, view }) {
+    return meetup
   }
 
   /**
    * Update meetup details.
    * PUT or PATCH meetups/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
    */
-  async update ({ params, request, response }) {
+  async update ({ params, request }) {
+    const meetup = await Meetup.findOrFail(params.id)
+    const data = request.only('title', 'description', 'date', 'owner_id')
+    const meetupAdress = request.input('address')
+
+    const trx = await Database.beginTransaction()
+
+    meetup.merge(data, trx)
+
+    if (meetupAdress) {
+      await meetup.address().update(meetupAdress, trx)
+    }
+
+    await trx.commit()
+
+    await meetup.load('address')
+
+    return meetup
   }
 
   /**
    * Delete a meetup with id.
    * DELETE meetups/:id
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
    */
-  async destroy ({ params, request, response }) {
+  async destroy ({ params }) {
+    const meetup = await Meetup.findOrFail(params.id)
+
+    await meetup.delete()
   }
 }
 
