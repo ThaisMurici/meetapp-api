@@ -9,6 +9,16 @@ class Meetup extends Model {
       .pivotTable('user_meetups')
       .withTimestamps()
   }
+
+  address () {
+    return this.hasOne('App/Models/MeetupAddress')
+  }
+
+  themes () {
+    return this.belongsToMany('App/Models/Preference')
+      .pivotTable('meetup_themes')
+      .withTimestamps()
+  }
 }
 
 module.exports = Meetup
