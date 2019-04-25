@@ -48,7 +48,7 @@ class UserController {
       user.merge({ name }, trx)
     }
 
-    if (preferencesIds && preferencesIds.length > 0) {
+    if (preferencesIds) {
       await user.preferences().sync(preferencesIds, null, trx)
     }
 
