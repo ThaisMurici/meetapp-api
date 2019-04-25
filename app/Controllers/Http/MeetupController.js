@@ -16,7 +16,6 @@ class MeetupController {
     let meetups = []
     if (queryTitle) {
       const parsedTerm = `%${queryTitle}%`
-      console.log('parsedTerm', parsedTerm)
       meetups = await Meetup.query()
         .whereRaw(`LOWER(title) like '${parsedTerm}'`)
         .with('address')
