@@ -1,10 +1,14 @@
 'use strict'
 
+const Database = use('Database')
 const User = use('App/Models/User')
 
 class UserController {
   async index () {
-    const users = await User.all()
+    const users = await User.query()
+      .with('preferences')
+      .fetch()
+
     return users
   }
 
@@ -18,11 +22,17 @@ class UserController {
     const userData = request.only(['name', 'email', 'password'])
     const preferencesIds = request.input('preferences')
 
-    const user = await User.create(userData)
+    const trx = await Database.beginTransaction()
+
+    const user = await User.create(userData, trx)
 
     if (preferencesIds && preferencesIds.length > 0) {
-      await user.preferences().sync(preferencesIds)
+      await user.preferences().sync(preferencesIds, null, trx)
     }
+
+    await trx.commit()
+
+    await user.load('preferences')
 
     return user
   }
@@ -32,15 +42,20 @@ class UserController {
     const name = request.input('name')
     const preferencesIds = request.input('preferences')
 
+    const trx = await Database.beginTransaction()
+
     if (name) {
-      user.merge({ name })
+      user.merge({ name }, trx)
     }
 
     if (preferencesIds && preferencesIds.length > 0) {
-      await user.preferences().sync(preferencesIds)
+      await user.preferences().sync(preferencesIds, null, trx)
     }
 
-    await user.save()
+    await trx.commit()
+
+    await user.load('preferences')
+
     return user
   }
 
