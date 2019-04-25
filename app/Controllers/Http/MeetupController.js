@@ -10,12 +10,27 @@ class MeetupController {
    * Show a list of all meetups.
    * GET meetups
    */
-  async index () {
-    const meetups = await Meetup.query()
-      .with('address')
-      .with('picture')
-      .with('themes')
-      .fetch()
+  async index ({ request }) {
+    const { title: queryTitle } = request.get('title')
+
+    let meetups = []
+    if (queryTitle) {
+      const parsedTerm = `%${queryTitle}%`
+      console.log('parsedTerm', parsedTerm)
+      meetups = await Meetup.query()
+        .whereRaw(`LOWER(title) like '${parsedTerm}'`)
+        .with('address')
+        .with('picture')
+        .with('themes')
+        .fetch()
+    } else {
+      meetups = await Meetup.query()
+        .with('address')
+        .with('picture')
+        .with('themes')
+        .fetch()
+    }
+
     return meetups
   }
 
