@@ -42,6 +42,7 @@ Route.group(() => {
     .except(['store'])
 
   Route.resource('meetups', 'MeetupController').apiOnly()
+  Route.post('meetups/:id/register', 'MeetupRegistrationController.store')
 
   Route.post('files', 'FileController.store')
   Route.get('files/:id', 'FileController.show')
