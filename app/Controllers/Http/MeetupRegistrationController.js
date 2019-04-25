@@ -1,6 +1,7 @@
 'use strict'
 
-const Mail = use('Mail')
+const Kue = use('Kue')
+const Job = use('App/Jobs/MeetupRegistrationMail')
 
 const User = use('App/Models/User')
 const Meetup = use('App/Models/Meetup')
@@ -18,19 +19,7 @@ class MeetupRegistrationController {
 
       user.save()
 
-      await Mail.send(
-        ['emails.meetup-registration', 'emails.meetup-registration-text'],
-        {
-          user,
-          meetup
-        },
-        message => {
-          message
-            .to(user.email)
-            .from('hello@meetapp.com', 'Meetapp Team')
-            .subject('Confirmação de inscrição')
-        }
-      )
+      Kue.dispatch(Job.key, { user, meetup }, { attempts: 3 })
     } catch (error) {
       return response.status(error.status).send({
         error: {
