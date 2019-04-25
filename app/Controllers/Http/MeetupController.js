@@ -64,8 +64,11 @@ class MeetupController {
     await trx.commit()
 
     await meetup.load('address')
-    await meetup.load('picture')
     await meetup.load('themes')
+
+    if (meetup.cover_picture) {
+      await meetup.load('picture')
+    }
 
     return meetup
   }
@@ -74,11 +77,24 @@ class MeetupController {
    * Display a single meetup.
    * GET meetups/:id
    */
-  async show ({ params }) {
-    const meetup = await Meetup.findOrFail(params.id)
-    await meetup.load('address')
-    await meetup.load('picture')
-    await meetup.load('themes')
+  async show ({ params, response }) {
+    const meetup = await Meetup.query()
+      .where('id', '=', params.id)
+      .withCount('users')
+      .with('address')
+      .with('picture')
+      .with('themes')
+      .fetch()
+
+    const formattedMeetup = meetup.toJSON()[0]
+
+    if (!formattedMeetup) {
+      return response.status(404).send({
+        error: {
+          message: 'Meetup not found.'
+        }
+      })
+    }
 
     return meetup
   }
@@ -114,8 +130,11 @@ class MeetupController {
     await trx.commit()
 
     await meetup.load('address')
-    await meetup.load('picture')
     await meetup.load('themes')
+
+    if (meetup.cover_picture) {
+      await meetup.load('picture')
+    }
 
     return meetup
   }
