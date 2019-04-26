@@ -4,6 +4,9 @@ const Meetup = use('App/Models/Meetup')
 const User = use('App/Models/User')
 
 class UserMeetupController {
+  /**
+   * Shows next meetups in which user has not registered yet.
+   */
   async showNext ({ params }) {
     const now = new Date()
 
@@ -17,6 +20,9 @@ class UserMeetupController {
     return nextMeetups
   }
 
+  /**
+   * Shows next meetups in which user has already registered.
+   */
   async showRegistrations ({ params }) {
     const now = new Date()
 
@@ -30,6 +36,9 @@ class UserMeetupController {
     return nextRegistrations
   }
 
+  /**
+   * Shows next meetups in which user has not registered yet, but that have themes that are of user interest.
+   */
   async showRecomended ({ params }) {
     const user = await User.query()
       .where('id', params.id)
