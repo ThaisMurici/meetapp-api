@@ -15,7 +15,20 @@ class MeetupRegistrationController {
       const user = await User.findOrFail(userId)
       const meetup = await Meetup.findOrFail(meetupId)
 
-      user.meetups().sync(meetupId)
+      console.log('search')
+
+      const registration = await user
+        .meetups()
+        .wherePivot('meetup_id', meetupId)
+        .fetch()
+
+      if (registration.toJSON()[0]) {
+        return response.status(200).send({
+          message: 'Registration already exists'
+        })
+      }
+
+      user.meetups().attach(meetupId)
 
       user.save()
 
