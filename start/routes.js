@@ -44,6 +44,16 @@ Route.group(() => {
   Route.resource('meetups', 'MeetupController').apiOnly()
   Route.post('meetups/:id/register', 'MeetupRegistrationController.store')
 
+  Route.get('users/:id/meetups/next', 'UserMeetupController.showNext')
+  Route.get(
+    'users/:id/meetups/registrations',
+    'UserMeetupController.showRegistrations'
+  )
+  Route.get(
+    'users/:id/meetups/recomended',
+    'UserMeetupController.showRecomended'
+  )
+
   Route.post('files', 'FileController.store')
   Route.get('files/:id', 'FileController.show')
   Route.delete('files/:id', 'FileController.destroy')
