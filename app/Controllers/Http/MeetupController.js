@@ -21,12 +21,14 @@ class MeetupController {
         .with('address')
         .with('picture')
         .with('themes')
+        .withCount('users')
         .fetch()
     } else {
       meetups = await Meetup.query()
         .with('address')
         .with('picture')
         .with('themes')
+        .withCount('users')
         .fetch()
     }
 
