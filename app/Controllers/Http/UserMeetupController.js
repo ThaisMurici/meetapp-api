@@ -15,6 +15,7 @@ class UserMeetupController {
       .whereDoesntHave('users', usersQuery => {
         usersQuery.wherePivot('user_id', params.id)
       })
+      .withCount('users')
       .fetch()
 
     return nextMeetups
@@ -31,6 +32,7 @@ class UserMeetupController {
       .whereHas('users', usersQuery => {
         usersQuery.wherePivot('user_id', params.id)
       })
+      .withCount('users')
       .fetch()
 
     return nextRegistrations
@@ -57,6 +59,7 @@ class UserMeetupController {
       .whereHas('themes', usersQuery => {
         usersQuery.whereInPivot('theme_id', preferenceArray)
       })
+      .withCount('users')
       .fetch()
 
     return nextRecomendend
