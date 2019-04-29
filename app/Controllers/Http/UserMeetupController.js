@@ -15,6 +15,9 @@ class UserMeetupController {
       .whereDoesntHave('users', usersQuery => {
         usersQuery.wherePivot('user_id', params.id)
       })
+      .with('address')
+      .with('picture')
+      .with('themes')
       .withCount('users')
       .fetch()
 
@@ -32,6 +35,9 @@ class UserMeetupController {
       .whereHas('users', usersQuery => {
         usersQuery.wherePivot('user_id', params.id)
       })
+      .with('address')
+      .with('picture')
+      .with('themes')
       .withCount('users')
       .fetch()
 
@@ -44,7 +50,9 @@ class UserMeetupController {
   async showRecomended ({ params }) {
     const user = await User.query()
       .where('id', params.id)
-      .with('preferences')
+      .with('address')
+      .with('picture')
+      .with('themes')
       .fetch()
 
     const userPreferences = user.toJSON()[0].preferences
