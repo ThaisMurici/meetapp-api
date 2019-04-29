@@ -40,12 +40,17 @@ class UserController {
   async update ({ params, request }) {
     const user = await User.findOrFail(params.id)
     const name = request.input('name')
+    const password = request.input('password')
     const preferencesIds = request.input('preferences')
 
     const trx = await Database.beginTransaction()
 
     if (name) {
       user.merge({ name }, trx)
+    }
+
+    if (password) {
+      user.merge({ password }, trx)
     }
 
     if (preferencesIds) {
